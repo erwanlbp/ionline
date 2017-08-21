@@ -50,7 +50,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Testing..."
-go test -cover $shortTestMode ./...
+go test -cover $shortTestMode $(go list ./... | grep -v /vendor/)
 if [ $? -ne 0 ]; then
   echo "FAILED"
   exit 1

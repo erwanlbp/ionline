@@ -2,14 +2,18 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
-	"github.com/erwanlbp/ionline/internal"
-	"github.com/erwanlbp/ionline/internal/sys/sysconf"
+	"github.com/erwanlbp/ionline/internal/handler"
+	"github.com/erwanlbp/ionline/internal/sys/config"
 )
 
 func main() {
-	fmt.Println("Hello world !")
-	fmt.Println("Host:", sysconf.ServerHost())
+	fmt.Println("Start server", config.ServerHost())
 
-	internal.InitServer()
+	router := handler.Init()
+	err := http.ListenAndServe(":"+config.ServerPort(), router)
+	if err != nil {
+		fmt.Println("Server crashed :", err.Error())
+	}
 }
