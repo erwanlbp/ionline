@@ -58,3 +58,4 @@ fi
 
 END=$(date +%s);
 echo $((END-START)) | awk '{print "Build took "int($1/60)"min "int($1%60)"sec"}'
+echo "SUCCESS"

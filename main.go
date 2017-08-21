@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/ErwanLBP/IOnline/internal"
-	"github.com/ErwanLBP/IOnline/internal/sys/sysconf"
+	"github.com/erwanlbp/ionline/internal"
+	"github.com/erwanlbp/ionline/internal/sys/sysconf"
 )
 
 func main() {
