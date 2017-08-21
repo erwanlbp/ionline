@@ -9,7 +9,7 @@ esac
 START=$(date +%s);
 
 echo "Check Go fmt..."
-GOFMT=`go fmt $(go list ./... | grep -v /vendor/) 2>&1`
+GOFMT=$(go fmt $(go list ./... | grep -v /vendor/) 2>&1)
 if [ -n "$GOFMT" ]
 then
   echo "Non-standard formatting in:" >&2
@@ -23,7 +23,7 @@ echo "Check Style..."
 go get -u github.com/golang/lint/golint
 
 # Check with golint
-GOLINT=`golint $(go list ./... | grep -v /vendor/) 2>&1`
+GOLINT=$(golint $(go list ./... | grep -v /vendor/) 2>&1)
 if [ -n "$GOLINT" ]
 then
   echo "Non-standard linting in:" >&2
@@ -33,7 +33,7 @@ then
 fi
 
 # Check with go vet
-GOVET=`go vet $(go list ./... | grep -v /vendor/) 2>&1`
+GOVET=$(go vet $(go list ./... | grep -v /vendor/) 2>&1)
 if [ -n "$GOVET" ]
 then
   echo "Non-standard constructs in:" >&2
