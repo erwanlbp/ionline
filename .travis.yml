@@ -1,0 +1,23 @@
+language: go
+
+go:
+  - 1.8.x
+
+notifications:
+  email: false
+
+addons:
+  apt:
+    sources:
+    - sourceline: 'ppa:masterminds/glide'
+    packages:
+    - glide
+
+install:
+  - #Do Nothing to prevent go get ./...
+
+before_script:
+  - glide install -v
+
+script:
+  - ./build_local.sh
