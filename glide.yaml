@@ -1,2 +1,3 @@
-package: github.com/ErwanLBP/IOnline
-import: []
+package: github.com/erwanlbp/ionline
+import:
+- package: github.com/gorilla/mux
