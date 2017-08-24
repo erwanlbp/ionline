@@ -20,4 +20,4 @@ before_script:
   - glide install -v
 
 script:
-  - ./build_local.sh
+  - ./build_travis.sh

@@ -8,15 +8,9 @@ esac
 
 START=$(date +%s);
 
-echo "Check Go fmt..."
-GOFMT=$(go fmt $(go list ./... | grep -v /vendor/) 2>&1)
-if [ -n "$GOFMT" ]
-then
-  echo "Non-standard formatting in:" >&2
-  echo $GOFMT >&2
-  echo "FAILED"
-  exit 1
-fi
+go fmt $(go list ./... | grep -v /vendor/)
+
+goimports -l -w $(find . -name \*.go -print | grep -v /vendor/)
 
 echo "Check Style..."
 # Install golint
