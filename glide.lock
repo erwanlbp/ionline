@@ -1,5 +1,5 @@
 hash: c84cd03d1e11dc3dbdffe3376f2d30a04f9db287b835389a72edb4de91f2aac6
-updated: 2017-08-23T22:51:50.871947781+02:00
+updated: 2017-08-24T20:17:34.745635443+02:00
 imports:
 - name: cloud.google.com/go
   version: e08da2b906e55a135acb4c335baefd7422ea35b0
@@ -18,7 +18,7 @@ imports:
   subpackages:
   - sync
 - name: golang.org/x/net
-  version: 1c05540f6879653db88113bc4a2b70aec4bd491f
+  version: 57efc9c3d9f91fb3277f8da1cff370539c4d3dc5
   subpackages:
   - context
   - context/ctxhttp
