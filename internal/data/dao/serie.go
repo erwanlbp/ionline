@@ -15,7 +15,7 @@ func AddSerie(log logging.Logger, serie *protobuf.Serie) (err error) {
 		return
 	}
 
-	serie.Id = util.ParseID(pushed.URL())
+	serie.ID = util.ParseID(pushed.URL())
 
 	return
 }

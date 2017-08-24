@@ -10,6 +10,9 @@ then
 fi
 
 echo "Check goimports..."
+# Install goimports
+go get golang.org/x/tools/cmd/goimports
+
 GOIMP=$(goimports -l -w $(find . -name \*.go -print | grep -v /vendor/) 2>&1)
 if [ -n "$GOIMP" ]
 then
