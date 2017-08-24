@@ -1,0 +1,11 @@
+syntax = "proto3";
+package protobuf;
+
+import "serie.proto";
+
+message User {
+    string id = 1;
+    string pseudo = 2;
+    string mail = 3;
+    repeated Serie series = 4;
+}
