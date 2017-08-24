@@ -2,7 +2,7 @@ syntax = "proto3";
 package protobuf;
 
 message Serie {
-    string id = 1;
+    string ID = 1;
     string name = 2;
     string url = 3;
     Quality quality = 4;
