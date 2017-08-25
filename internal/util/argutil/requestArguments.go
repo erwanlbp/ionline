@@ -1,11 +1,12 @@
 package argutil
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"io/ioutil"
 
 	"github.com/gorilla/mux"
 )
@@ -76,7 +77,7 @@ func (ra *Args) Int64QueryParamOptional(name string) (int64, bool) {
 func (ra *Args) HeaderOptional(name string) (string, bool) {
 	header := ra.request.Header.Get(name)
 	header, err := url.QueryUnescape(header)
-	return header, (err == nil && header != "")
+	return header, err == nil && header != ""
 }
 
 // Header return the request header name
@@ -89,9 +90,10 @@ func (ra *Args) Header(name string) string {
 }
 
 // Body returns the body of the request
-func (ra *Args) Body(decoded interface{}) {
-	err := json.NewDecoder(ra.request.Body).Decode(&decoded)
+func (ra *Args) Body() []byte {
+	body, err := ioutil.ReadAll(ra.request.Body)
 	ra.addError(err)
+	return body
 }
 
 // Cookie return the cookie with the given name or nil if not found

@@ -1,0 +1,133 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>{{.BaseDatas.Header}}</title>
+    <!--<meta name="description" content="">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div class="navbar-brand">{{.BaseDatas.SiteName}}</div>
+        </div>
+    </div>
+</nav>
+
+<div class="col-sm-offset-1 col-sm-10">
+    <form onsubmit="return false">
+        <table class="table table-hover">
+            <caption>{{.BaseDatas.Header}}</caption>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th class="col-sm-2">Name</th>
+                <th class="col-sm-1">Quality</th>
+                <th class="col-sm-1">Language</th>
+                <th class="col-sm-1">Season</th>
+                <th class="col-sm-1">Episode</th>
+                <th class="col-sm-3">URL</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th></th>
+                <td><input type="text" id="newSerie_name" placeholder="Name" class="form-control"></td>
+                <td>
+                    <select id="newSerie_quality" class="form-control">
+                        {{range $value, $quality := .Qualities}}
+                        <option value="{{$value}}">{{$quality}}</option>
+                        {{end}}
+                    </select>
+                </td>
+                <td>
+                    <select id="newSerie_language" class="form-control">
+                        {{range $value, $lang := .Languages}}
+                        <option value="{{$value}}">{{$lang}}</option>
+                        {{end}}
+                    </select>
+                </td>
+                <td><input type="number" id="newSerie_season" placeholder="Season" class="form-control"></td>
+                <td></td>
+                <td><input type="text" id="newSerie_url" placeholder="Copy/Paste the URL" class="form-control"></td>
+                <td>
+                    <button class="btn btn-success" type="submit" onclick="addSerie()">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </td>
+            </tr>
+            {{range $serie := .Series}}
+            <tr>
+                <th>{{$serie.ID}}</th>
+                <td>{{$serie.Name}}</td>
+                <td>{{$serie.Quality}}</td>
+                <td>{{$serie.Language}}</td>
+                <td>{{$serie.Season}}</td>
+                <td>{{$serie.LastEpisode}}</td>
+                <td>{{$serie.URL}}</td>
+                <td>
+                    <button class="btn btn-danger" type="button" onclick="deleteSerie('{{$.DeleteSerieURL $serie.ID}}')">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<script>
+    function addSerie() {
+        var name = document.getElementById("newSerie_name").value;
+        var qualityObj = document.getElementById("newSerie_quality");
+        var quality = qualityObj.options[qualityObj.selectedIndex].value;
+        var languageObj = document.getElementById("newSerie_language");
+        var language = languageObj.options[languageObj.selectedIndex].value;
+        var season = document.getElementById("newSerie_season").value;
+        var url = document.getElementById("newSerie_url").value;
+
+        var newSerie = JSON.stringify({
+            name: name,
+            quality: quality,
+            language: language,
+            season: season,
+            url: url
+        });
+
+        var req = new XMLHttpRequest();
+        req.open("POST", "{{.AddSerieURL}}");
+        req.setRequestHeader("Content-Type", "application/json");
+        req.onreadystatechange = function () {
+            if (req.readyState === 4) {
+                if (req.status >= 400)
+                    alert("Error:" + req.status + " " + req.responseText);
+                else
+                    location.reload();
+            }
+        };
+        req.send(newSerie);
+    }
+
+    function deleteSerie(path) {
+        var req = new XMLHttpRequest();
+        req.open("DELETE", path);
+        req.onreadystatechange = function () {
+            if (req.readyState === 4) {
+                if (req.status >= 400)
+                    alert("Error:" + req.status + " " + req.responseText);
+                else
+                    location.reload();
+            }
+        };
+        req.send();
+    }
+</script>
+</body>
+</html>

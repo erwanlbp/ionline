@@ -7,7 +7,7 @@ import (
 
 func init() {
 	// If we are not located in the right directory we stop the server
-	path, err := filepath.Abs(PublicPath())
+	path, err := filepath.Abs(PagePath())
 	if err == nil {
 		_, err = os.Stat(path)
 		os.IsNotExist(err)
@@ -18,8 +18,8 @@ func init() {
 	}
 }
 
-// PublicPath returns the path to the html templates
-func PublicPath() string {
+// PagePath returns the path to the html templates
+func PagePath() string {
 	return rootInternal() + "public/www/"
 }
 
