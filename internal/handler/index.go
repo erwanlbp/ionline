@@ -21,7 +21,7 @@ func initIndexPage(router *mux.Router) {
 }
 
 func indexPage(log logging.Logger, args *argutil.Args) *responseutil.ReturnData {
-	return responseutil.Template(sys.PublicPath()+"index.html",
+	return responseutil.Template(sys.PagePath()+"index.html",
 		indexTemplateData{
 			BaseDatas: responseutil.BaseTemplateDatas(),
 		})

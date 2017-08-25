@@ -11,7 +11,7 @@ func ParseID(url string) (id string) {
 
 // ParsePath takes a Firebase URL and remove the host and the .json at the end
 func ParsePath(url string) (path string) {
-	sep := ".com"
+	sep := ".com/"
 	endHost := strings.Index(url, sep)
 	path = url[endHost+len(sep):]
 	path = strings.TrimSuffix(path, ".json")

@@ -17,6 +17,7 @@ func Init() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 
 	initIndexPage(router)
+	initSeries(router)
 
 	return router
 }
