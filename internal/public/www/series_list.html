@@ -13,25 +13,27 @@
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <div class="navbar-brand">{{.BaseDatas.SiteName}}</div>
-        </div>
+        <a href="{{.BaseDatas.IndexURL}}">
+            <div class="navbar-header">
+                <div class="navbar-brand">{{.BaseDatas.SiteName}}</div>
+            </div>
+        </a>
     </div>
 </nav>
 
 <div class="col-sm-offset-1 col-sm-10">
     <form onsubmit="return false">
         <table class="table table-hover">
-            <caption>{{.BaseDatas.Header}}</caption>
+            <caption><h2>{{.BaseDatas.Header}}</h2></caption>
             <thead>
             <tr>
                 <th>ID</th>
-                <th class="col-sm-2">Name</th>
-                <th class="col-sm-1">Quality</th>
-                <th class="col-sm-1">Language</th>
-                <th class="col-sm-1">Season</th>
-                <th class="col-sm-1">Episode</th>
-                <th class="col-sm-3">URL</th>
+                <th>Name</th>
+                <th>Quality</th>
+                <th>Language</th>
+                <th>Season</th>
+                <th>Episode</th>
+                <th>URL</th>
                 <th></th>
             </tr>
             </thead>
@@ -53,7 +55,7 @@
                         {{end}}
                     </select>
                 </td>
-                <td><input type="number" id="newSerie_season" placeholder="Season" class="form-control"></td>
+                <td></td>
                 <td></td>
                 <td><input type="text" id="newSerie_url" placeholder="Copy/Paste the URL" class="form-control"></td>
                 <td>
@@ -66,8 +68,8 @@
             <tr>
                 <th>{{$serie.ID}}</th>
                 <td>{{$serie.Name}}</td>
-                <td>{{$serie.Quality}}</td>
-                <td>{{$serie.Language}}</td>
+                <td>{{index $.Qualities $serie.Quality}}</td>
+                <td>{{index $.Languages $serie.Language}}</td>
                 <td>{{$serie.Season}}</td>
                 <td>{{$serie.LastEpisode}}</td>
                 <td>{{$serie.URL}}</td>
@@ -90,14 +92,12 @@
         var quality = qualityObj.options[qualityObj.selectedIndex].value;
         var languageObj = document.getElementById("newSerie_language");
         var language = languageObj.options[languageObj.selectedIndex].value;
-        var season = document.getElementById("newSerie_season").value;
         var url = document.getElementById("newSerie_url").value;
 
         var newSerie = JSON.stringify({
             name: name,
-            quality: quality,
-            language: language,
-            season: season,
+            quality: Number(quality),
+            language: Number(language),
             url: url
         });
 

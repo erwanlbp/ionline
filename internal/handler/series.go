@@ -12,6 +12,7 @@ import (
 	"github.com/erwanlbp/ionline/internal/sys/urlpath"
 	"github.com/erwanlbp/ionline/internal/util/argutil"
 	"github.com/erwanlbp/ionline/internal/util/responseutil"
+	"github.com/erwanlbp/ionline/internal/webcrawler"
 )
 
 type seriesListTemplateData struct {
@@ -42,7 +43,7 @@ func listSeries(log logging.Logger, args *argutil.Args) *responseutil.ReturnData
 
 	return responseutil.Template(sys.PagePath()+"series_list.html",
 		seriesListTemplateData{
-			BaseDatas:   responseutil.BaseTemplateDatas(),
+			BaseDatas:   responseutil.BaseTemplateDatas().FillHeader("Series"),
 			Series:      series,
 			AddSerieURL: urlpath.AddSerieClientURL(),
 			Qualities:   types.QualityName,
@@ -58,10 +59,20 @@ func addSerie(log logging.Logger, args *argutil.Args) *responseutil.ReturnData {
 	}
 
 	var newSerie dao.Serie
-	newSerie.ParseJSON(body)
+	err := newSerie.FillFromJSON(body)
+	if err != nil {
+		return responseutil.Error(http.StatusBadRequest, err)
+	}
+
+	// Find the informations of this serie (e.g host, season, episode)
+	log.Println("Finding infos in", newSerie.URL, "...")
+	err = webcrawler.ActualizeSerie(log, &newSerie)
+	if err != nil {
+		return responseutil.Error(http.StatusBadRequest, err)
+	}
 
 	// Save the new serie
-	err := newSerie.Push(log)
+	err = newSerie.Push(log)
 	if err != nil {
 		return responseutil.Error(http.StatusInternalServerError, err)
 	}
