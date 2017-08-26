@@ -2,8 +2,12 @@ package dao
 
 import (
 	"encoding/json"
+	"fmt"
+
+	"errors"
 
 	"github.com/erwanlbp/ionline/internal/data/dao/internal"
+	"github.com/erwanlbp/ionline/internal/data/host"
 	"github.com/erwanlbp/ionline/internal/data/types"
 	"github.com/erwanlbp/ionline/internal/sys/logging"
 	"github.com/erwanlbp/ionline/internal/util"
@@ -13,6 +17,7 @@ import (
 type Serie struct {
 	ID          string         `json:"id,omitempty"`
 	Name        string         `json:"name,omitempty"`
+	Host        host.Host      `json:"host,omitempty"`
 	Quality     types.Quality  `json:"quality,omitempty"`
 	Language    types.Language `json:"language,omitempty"`
 	Season      int            `json:"season,omitempty"`
@@ -25,9 +30,21 @@ const (
 	pathSeries = "series"
 )
 
-// ParseJSON a serie from a byte slice
-func (serie *Serie) ParseJSON(serieBytes []byte) (err error) {
+// FillFromJSON parse a serie from a json byte slice
+func (serie *Serie) FillFromJSON(serieBytes []byte) (err error) {
 	err = json.Unmarshal(serieBytes, serie)
+
+	// Check required fields
+	_, okLang := types.LanguageName[serie.Language]
+	if !okLang {
+		err = errors.New("Field language isn't valid")
+	}
+
+	_, okQual := types.QualityName[serie.Quality]
+	if !okQual {
+		err = errors.New("Field quality isn't valid")
+	}
+
 	return
 }
 
@@ -68,4 +85,17 @@ func (serie *Serie) Delete(log logging.Logger) (err error) {
 	err = internal.Firebase.Child(pathSeries).Child(serie.ID).Remove()
 	internal.LogRemove(log, pathSeries, serie.ID)
 	return
+}
+
+// String describe the object
+func (serie *Serie) String() string {
+	return fmt.Sprintf("id:%v name:%v host:%v quality:%v language:%v season:%v lastEpisode:%v url:%v",
+		serie.ID,
+		serie.Name,
+		host.HostName[serie.Host],
+		types.QualityName[serie.Quality],
+		types.LanguageName[serie.Language],
+		serie.Season,
+		serie.LastEpisode,
+		serie.URL)
 }
