@@ -22,3 +22,7 @@ then
 fi
 
 /bin/sh build_local.sh
+
+echo "Send cover to goveralls..."
+go get github.com/mattn/goveralls
+goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN

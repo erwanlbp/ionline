@@ -52,7 +52,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "-- Testing internal ..."
-go test -p 1 -cover $shortTestMode ./internal/... -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout
+go test -p 1 -covermode=count -coverprofile=coverage.out $shortTestMode ./internal/... -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout
 if [ $? -ne 0 ]; then
   echo "FAILED"
   exit 1
