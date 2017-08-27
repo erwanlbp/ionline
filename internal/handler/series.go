@@ -15,7 +15,8 @@ import (
 	"github.com/erwanlbp/ionline/internal/webcrawler"
 )
 
-type seriesListTemplateData struct {
+// SeriesListTemplateData is the datas needed for the series_list.html template
+type SeriesListTemplateData struct {
 	BaseDatas   responseutil.BaseTemplateData
 	Series      []dao.Serie
 	AddSerieURL string
@@ -24,7 +25,7 @@ type seriesListTemplateData struct {
 }
 
 // DeleteSerieURL returns the url containing the id of the serie to delete
-func (t seriesListTemplateData) DeleteSerieURL(id string) string {
+func (t SeriesListTemplateData) DeleteSerieURL(id string) string {
 	return urlpath.DeleteSerieClientURL(id)
 }
 
@@ -42,7 +43,7 @@ func listSeries(log logging.Logger, args *argutil.Args) *responseutil.ReturnData
 	}
 
 	return responseutil.Template(sys.PagePath()+"series_list.html",
-		seriesListTemplateData{
+		SeriesListTemplateData{
 			BaseDatas:   responseutil.BaseTemplateDatas().FillHeader("Series"),
 			Series:      series,
 			AddSerieURL: urlpath.AddSerieClientURL(),

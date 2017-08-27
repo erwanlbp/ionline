@@ -2,6 +2,7 @@ package sysauth
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"os"
@@ -10,15 +11,19 @@ import (
 	"gopkg.in/zabawaba99/firego.v1"
 
 	"github.com/erwanlbp/ionline/internal/data/dao"
-	"github.com/erwanlbp/ionline/internal/sys/sysconst"
+	"github.com/erwanlbp/ionline/internal/sys/config"
 )
+
+type firebaseSecret struct {
+	ProjectID string `json:"project_id"`
+}
 
 // InitFirebase initialize the Firebase client and set the Firebase instance in the dao package
 func InitFirebase() (err error) {
 	// Load the file containing Firebase secret
-	secretFile, ok := os.LookupEnv(sysconst.FirebaseSecret)
+	secretFile, ok := os.LookupEnv(config.FirebaseAuth())
 	if !ok || secretFile == "" {
-		err = errors.New("Env " + sysconst.FirebaseSecret + " not found")
+		err = errors.New("Env " + config.FirebaseAuth() + " not found")
 		return
 	}
 
@@ -32,7 +37,13 @@ func InitFirebase() (err error) {
 		return
 	}
 
-	dao.SetFirebaseClient(firego.New("https://ionline-17da9.firebaseio.com/", conf.Client(context.Background())))
+	var fbSec firebaseSecret
+	err = json.Unmarshal(d, &fbSec)
+	if err != nil {
+		return
+	}
+
+	dao.SetFirebaseClient(firego.New("https://"+fbSec.ProjectID+".firebaseio.com/", conf.Client(context.Background())))
 
 	return
 }

@@ -44,7 +44,15 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Testing..."
-go test -cover $shortTestMode $(go list ./... | grep -v /vendor/)
+echo "-- Testing cmd ..."
+go test -cover $shortTestMode ./cmd/...
+if [ $? -ne 0 ]; then
+  echo "FAILED"
+  exit 1
+fi
+
+echo "-- Testing internal ..."
+go test -p 1 -cover $shortTestMode ./internal/... -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout
 if [ $? -ne 0 ]; then
   echo "FAILED"
   exit 1

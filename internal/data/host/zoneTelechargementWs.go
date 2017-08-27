@@ -36,7 +36,7 @@ func (h *ZoneTelechargementWsParser) LastEpisode(page string) (lastEpisode int, 
 	matchSplit[1] = strings.TrimSuffix(matchSplit[1], "<")
 	episode, err := strconv.ParseInt(matchSplit[1], 10, 8)
 	if err != nil {
-		err = errors.New("Finding last episode: " + err.Error())
+		err = errors.New("Can't find the episode in the last episode occurence : " + err.Error())
 		return
 	}
 	lastEpisode = int(episode)

@@ -2,7 +2,7 @@ package host
 
 import (
 	"errors"
-	"strings"
+	"net/url"
 )
 
 // Host represents a supported website where to find series
@@ -15,7 +15,7 @@ const (
 
 // Strings for the supported hosts
 const (
-	ZoneTelechargementWsString = "zone-telechargement.ws"
+	ZoneTelechargementWsString = "www.zone-telechargement.ws"
 )
 
 // HostName maps Host -> String
@@ -32,17 +32,18 @@ type Parser interface {
 }
 
 // GetParser returns the GetParser matching the url's host
-func GetParser(url string) (host Parser, err error) {
-	url = strings.TrimPrefix(url, "http://")
-	url = strings.TrimPrefix(url, "https://")
-	url = strings.TrimPrefix(url, "www.")
-	urlSplit := strings.Split(url, "/")
+func GetParser(pageURL string) (host Parser, err error) {
+	urlParsed, err := url.Parse(pageURL)
+	if err != nil {
+		return
+	}
+	domain := urlParsed.Hostname()
 
-	switch urlSplit[0] {
+	switch domain {
 	case ZoneTelechargementWsString:
 		host = &ZoneTelechargementWsParser{}
 	default:
-		err = errors.New("Unknown host " + urlSplit[0])
+		err = errors.New("Unknown host " + domain)
 	}
 	return
 }
