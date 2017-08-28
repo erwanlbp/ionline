@@ -61,7 +61,7 @@ do
     then
         if [ -f profile.out ]
         then
-            cat profile.out | grep -v "mode: set" >> acc.coverprofile
+            grep -v "mode: set" < profile.out >> acc.coverprofile
         fi
     else
         exit 1
