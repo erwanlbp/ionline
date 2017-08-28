@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 shortTestMode="-short"
 case "-long" in
@@ -21,7 +21,7 @@ GOLINT=$(golint $(go list ./... | grep -v /vendor/))
 if [ -n "$GOLINT" ]
 then
   echo "Non-standard linting in:" >&2
-  echo $GOLINT >&2
+  echo "$GOLINT"
   echo "FAILED"
   exit 1
 fi
@@ -31,7 +31,7 @@ GOVET=$(go vet $(go list ./... | grep -v /vendor/))
 if [ -n "$GOVET" ]
 then
   echo "Non-standard constructs in:" >&2
-  echo $GOVET >&2
+  echo "$GOVET"
   echo "FAILED"
   exit 1
 fi
@@ -52,13 +52,25 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "-- Testing internal ..."
-# Install overalls for the coverage
-go get github.com/go-playground/overalls
+echo "mode: set" > acc.out
+for Dir in $(go list ./internal/...);
+do
+    returnval=`go test -coverprofile=profile.out $Dir $shortTestMode -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout`
+    echo "$returnval"
+    if [[ ${returnval} != *FAIL* ]]
+    then
+        if [ -f profile.out ]
+        then
+            cat profile.out | grep -v "mode: set" >> acc.out
+        fi
+    else
+        exit 1
+    fi
+done
 
-overalls -project=github.com/erwanlbp/ionline -covermode=count -ignore "cmd,vendor" -- $shortTestMode
-if [ $? -ne 0 ]; then
-  echo "FAILED"
-  exit 1
+if [ -f profile.out ]
+then
+	cat profile.out | grep -v "mode: set" >> acc.out
 fi
 
 END=$(date +%s);
