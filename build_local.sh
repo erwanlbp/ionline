@@ -52,7 +52,10 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "-- Testing internal ..."
-go test -p 1 -covermode=count -coverprofile=coverage.out $shortTestMode ./internal/... -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout
+# Install overalls for the coverage
+go get github.com/go-playground/overalls
+
+overalls -project=github.com/erwanlbp/ionline -covermode=count -ignore "cmd,vendor" -- $shortTestMode
 if [ $? -ne 0 ]; then
   echo "FAILED"
   exit 1

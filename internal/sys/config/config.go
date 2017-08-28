@@ -14,7 +14,7 @@ var firebaseAuth string
 func init() {
 	flag.StringVar(&serverHost, "host", "http://localhost:8080", "The host of the server")
 	flag.StringVar(&logger, "log", "stdoutcache", "The type of logger")
-	flag.StringVar(&pathPublic, "public", "./internal/public/", "Path to the public directory")
+	flag.StringVar(&pathPublic, "public", os.Getenv("GOPATH")+"/src/github.com/erwanlbp/ionline/internal/public/", "Path to the public directory")
 	flag.StringVar(&firebaseAuth, "firebase-auth", "IONLINE_SECRET_FIREBASE", "Name of the environment variable for the Firebase Authentication")
 	flag.Parse()
 
