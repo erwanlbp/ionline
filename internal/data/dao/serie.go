@@ -25,6 +25,9 @@ type Serie struct {
 	URL         string         `json:"url,omitempty"`
 }
 
+// SerieStringFormat is the format to describe a serie
+const SerieStringFormat = "{id:%v name:%v host:%v quality:%v language:%v season:%v lastEpisode:%v url:%v}"
+
 // Constants describing Firebase paths
 const (
 	pathSeries = "series"
@@ -48,19 +51,6 @@ func (serie *Serie) FillFromJSON(serieBytes []byte) (err error) {
 	return
 }
 
-// Push a serie in Firebase
-func (serie *Serie) Push(log logging.Logger) (err error) {
-	pushed, err := internal.Firebase.Child(pathSeries).Push(serie)
-	internal.LogPush(log, pushed, serie)
-	if err != nil {
-		return
-	}
-
-	serie.ID = util.ParseID(pushed.URL())
-
-	return
-}
-
 // FindAllSeries returns all the series at /series in Firebase
 func FindAllSeries(log logging.Logger) (series []Serie, err error) {
 	// Get datas from Firebase
@@ -80,6 +70,19 @@ func FindAllSeries(log logging.Logger) (series []Serie, err error) {
 	return
 }
 
+// Push a serie in Firebase
+func (serie *Serie) Push(log logging.Logger) (err error) {
+	pushed, err := internal.Firebase.Child(pathSeries).Push(serie)
+	internal.LogPush(log, serie, pathSeries)
+	if err != nil {
+		return
+	}
+
+	serie.ID = util.ParseID(pushed.URL())
+
+	return
+}
+
 // Delete a serie in Firebase
 func (serie *Serie) Delete(log logging.Logger) (err error) {
 	err = internal.Firebase.Child(pathSeries).Child(serie.ID).Remove()
@@ -89,7 +92,7 @@ func (serie *Serie) Delete(log logging.Logger) (err error) {
 
 // String describe the object
 func (serie *Serie) String() string {
-	return fmt.Sprintf("id:%v name:%v host:%v quality:%v language:%v season:%v lastEpisode:%v url:%v",
+	return fmt.Sprintf(SerieStringFormat,
 		serie.ID,
 		serie.Name,
 		host.HostName[serie.Host],

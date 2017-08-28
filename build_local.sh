@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 shortTestMode="-short"
 case "-long" in
@@ -21,7 +21,7 @@ GOLINT=$(golint $(go list ./... | grep -v /vendor/))
 if [ -n "$GOLINT" ]
 then
   echo "Non-standard linting in:" >&2
-  echo $GOLINT >&2
+  echo "$GOLINT"
   echo "FAILED"
   exit 1
 fi
@@ -31,7 +31,7 @@ GOVET=$(go vet $(go list ./... | grep -v /vendor/))
 if [ -n "$GOVET" ]
 then
   echo "Non-standard constructs in:" >&2
-  echo $GOVET >&2
+  echo "$GOVET"
   echo "FAILED"
   exit 1
 fi
@@ -44,11 +44,29 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Testing..."
-go test -cover $shortTestMode $(go list ./... | grep -v /vendor/)
+echo "-- Testing cmd ..."
+go test -cover $shortTestMode ./cmd/...
 if [ $? -ne 0 ]; then
   echo "FAILED"
   exit 1
 fi
+
+echo "-- Testing internal ..."
+echo "mode: set" > acc.coverprofile
+for Dir in $(go list ./internal/...);
+do
+    returnval=$(go test -coverprofile=profile.out $Dir $shortTestMode -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout)
+    echo "$returnval"
+    if [[ ${returnval} != *FAIL* ]]
+    then
+        if [ -f profile.out ]
+        then
+            grep -v "mode: set" < profile.out >> acc.coverprofile
+        fi
+    else
+        exit 1
+    fi
+done
 
 END=$(date +%s);
 echo $((END-START)) | awk '{print "Build took "int($1/60)"min "int($1%60)"sec"}'

@@ -6,7 +6,9 @@ import (
 	"github.com/erwanlbp/ionline/internal/data/dao/internal"
 )
 
-// SetFirebaseClient fill the Firebase variable with the Firebase object received
-func SetFirebaseClient(firebase *firego.Firebase) {
+// SetFirebaseClient fill the Firebase variable with the Firebase object received and return the previous one
+func SetFirebaseClient(firebase *firego.Firebase) *firego.Firebase {
+	oldFB := internal.Firebase
 	internal.Firebase = firebase
+	return oldFB
 }

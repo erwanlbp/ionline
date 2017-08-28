@@ -1,5 +1,5 @@
 hash: c84cd03d1e11dc3dbdffe3376f2d30a04f9db287b835389a72edb4de91f2aac6
-updated: 2017-08-25T22:45:29.893719023+02:00
+updated: 2017-08-26T14:47:17.114880315+02:00
 imports:
 - name: cloud.google.com/go
   version: 8bfea1e8ed407961bc6972b5557c35d8310e203a
@@ -13,6 +13,8 @@ imports:
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
   version: ac112f7d75a0714af1bd86ab17749b31f7809640
+- name: github.com/maprost/assertion
+  version: 19f9917fc3ebabc69a159fefe6eab70f54da6439
 - name: github.com/maprost/restclient
   version: a80ccdac917d3a883c8f5166e887640c833573ca
   subpackages:

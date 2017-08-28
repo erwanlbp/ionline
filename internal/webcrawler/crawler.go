@@ -20,7 +20,7 @@ func ActualizeSerie(log logging.Logger, serie *dao.Serie) (err error) {
 	log.Println("Host is", hostParser.Name())
 
 	// Get the content of the serie.URL
-	pageContent, err := extdep.Serie.Get(serie.URL)
+	pageContent, err := extdep.CommonClient.Get(serie.URL)
 	if err != nil {
 		return
 	}
