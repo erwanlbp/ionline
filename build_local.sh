@@ -52,26 +52,21 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "-- Testing internal ..."
-echo "mode: set" > acc.out
+echo "mode: set" > acc.coverprofile
 for Dir in $(go list ./internal/...);
 do
-    returnval=`go test -coverprofile=profile.out $Dir $shortTestMode -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout`
+    returnval=$(go test -coverprofile=profile.out $Dir $shortTestMode -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout)
     echo "$returnval"
     if [[ ${returnval} != *FAIL* ]]
     then
         if [ -f profile.out ]
         then
-            cat profile.out | grep -v "mode: set" >> acc.out
+            cat profile.out | grep -v "mode: set" >> acc.coverprofile
         fi
     else
         exit 1
     fi
 done
-
-if [ -f profile.out ]
-then
-	cat profile.out | grep -v "mode: set" >> acc.out
-fi
 
 END=$(date +%s);
 echo $((END-START)) | awk '{print "Build took "int($1/60)"min "int($1%60)"sec"}'
