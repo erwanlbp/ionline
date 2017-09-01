@@ -6,5 +6,5 @@ import (
 
 // PagePath returns the path to the html templates
 func PagePath() string {
-	return config.PathToPublic() + "www/"
+	return config.ProjectPath() + "internal/public/www/"
 }

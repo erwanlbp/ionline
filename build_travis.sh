@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Check Go fmt..."
+echo "Checking Go fmt ..."
 GOFMT=$(go fmt $(go list ./... | grep -v /vendor/))
 if [ -n "$GOFMT" ]
 then
@@ -9,7 +9,7 @@ then
   exit 1
 fi
 
-echo "Check goimports..."
+echo "Checking goimports ..."
 # Install goimports
 go get golang.org/x/tools/cmd/goimports
 
@@ -26,10 +26,13 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Send cover to goveralls..."
+echo "Sending cover to goveralls ..."
 go get github.com/mattn/goveralls
 goveralls -coverprofile=acc.coverprofile -service=travis-ci -repotoken $COVERALLS_TOKEN
 if [ $? -ne 0 ]; then
   echo "FAILED"
   exit 1
 fi
+
+echo "Cleaning Firebase test database ..."
+./cleanDB

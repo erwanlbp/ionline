@@ -2,7 +2,10 @@ package urlpath
 
 // Path pieces
 const (
-	Series = "/series"
+	Series   = "/series"
+	Login    = "/login"
+	Logout   = "/logout"
+	Callback = "/callback"
 )
 
 // Path params
@@ -12,3 +15,12 @@ const (
 )
 
 // Query params
+const (
+	CodeQueryParam  = "code"
+	StateQueryParam = "state"
+)
+
+// Cookies
+const (
+	AuthChecksumCookieParameter = "auth_checksum"
+)

@@ -8,21 +8,22 @@ import (
 
 var serverHost string
 var logger string
-var pathPublic string
-var firebaseAuth string
+var projectPath string
+var firebaseCredentials string
+var googleAuth string
 
 func init() {
 	flag.StringVar(&serverHost, "host", "http://localhost:8080", "The host of the server")
 	flag.StringVar(&logger, "log", "stdoutcache", "The type of logger")
-	flag.StringVar(&pathPublic, "public", os.Getenv("GOPATH")+"/src/github.com/erwanlbp/ionline/internal/public/", "Path to the public directory")
-	flag.StringVar(&firebaseAuth, "firebase-auth", "IONLINE_SECRET_FIREBASE", "Name of the environment variable for the Firebase Authentication")
+	flag.StringVar(&projectPath, "projectpath", os.Getenv("GOPATH")+"/src/github.com/erwanlbp/ionline/", "Path to the project directory")
+	flag.StringVar(&firebaseCredentials, "firebase-credentials", "IONLINE_SECRET_FIREBASE", "Name of the environment variable for the Firebase Credentials")
+	flag.StringVar(&googleAuth, "google-auth", "IONLINE_SECRET_GOOGLE_AUTH", "Name of the environment variable for the Google Authentication")
 	flag.Parse()
 
 	// If the public directory is not accessible, no need to start the server
-	path, err := filepath.Abs(pathPublic)
+	path, err := filepath.Abs(projectPath)
 	if err == nil {
 		_, err = os.Stat(path)
-		os.IsNotExist(err)
 	}
 	if err != nil {
 		panic(err.Error())
@@ -44,12 +45,17 @@ func Logger() string {
 	return logger
 }
 
-// PathToPublic returns the path to the public folder
-func PathToPublic() string {
-	return pathPublic
+// ProjectPath returns the path to the public folder
+func ProjectPath() string {
+	return projectPath
 }
 
-// FirebaseAuth returns the name of the environment variable for the Firebase Authentication
-func FirebaseAuth() string {
-	return firebaseAuth
+// FirebaseCredentials returns the name of the environment variable for the Firebase Credentials
+func FirebaseCredentials() string {
+	return firebaseCredentials
+}
+
+// GoogleAuth returns the name of the environment variable for the Firebase Authentication
+func GoogleAuth() string {
+	return googleAuth
 }

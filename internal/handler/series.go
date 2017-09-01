@@ -30,9 +30,9 @@ func (t SeriesListTemplateData) DeleteSerieURL(id string) string {
 }
 
 func initSeries(router *mux.Router) {
-	router.Methods(http.MethodGet).Path(urlpath.SeriesPath()).HandlerFunc(InitRequestEnvironment(listSeries))
-	router.Methods(http.MethodPost).Path(urlpath.AddSeriePath()).HandlerFunc(InitRequestEnvironment(addSerie))
-	router.Methods(http.MethodDelete).Path(urlpath.DeleteSeriePath()).HandlerFunc(InitRequestEnvironment(deleteSerie))
+	router.Methods(http.MethodGet).Path(urlpath.SeriesPath()).HandlerFunc(InitRequestEnvironment(RequireAuthentify(listSeries)))
+	router.Methods(http.MethodPost).Path(urlpath.AddSeriePath()).HandlerFunc(InitRequestEnvironment(RequireAuthentify(addSerie)))
+	router.Methods(http.MethodDelete).Path(urlpath.DeleteSeriePath()).HandlerFunc(InitRequestEnvironment(RequireAuthentify(deleteSerie)))
 }
 
 func listSeries(log logging.Logger, args *argutil.Args) *responseutil.ReturnData {
