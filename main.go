@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/erwanlbp/ionline/internal/extdep"
 	"github.com/erwanlbp/ionline/internal/handler"
 	"github.com/erwanlbp/ionline/internal/sys/config"
 	"github.com/erwanlbp/ionline/internal/sys/sysauth"
@@ -19,6 +20,13 @@ func main() {
 	err = sysauth.InitFirebase()
 	if err != nil {
 		fmt.Println("ERROR Initializing Firebase:", err.Error())
+		os.Exit(1)
+	}
+
+	// Init Google Auth
+	err = extdep.GoogleAuthClient.InitGoogleAuthCredentials()
+	if err != nil {
+		fmt.Println("ERROR Initializing Google Auth Client:", err.Error())
 		os.Exit(1)
 	}
 

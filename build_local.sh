@@ -12,7 +12,7 @@ go fmt $(go list ./... | grep -v /vendor/)
 
 goimports -l -w $(find . -name \*.go -print | grep -v /vendor/)
 
-echo "Check Style..."
+echo "Checking style ..."
 # Install golint
 go get -u github.com/golang/lint/golint
 
@@ -36,7 +36,15 @@ then
   exit 1
 fi
 
-echo "Building..."
+echo "Building ..."
+echo "-- Building cmd/cleanDB ..."
+CGO_ENABLED=0 go build github.com/erwanlbp/ionline/cmd/cleanDB
+if [ $? -ne 0 ]; then
+  echo "FAILED"
+  exit 1
+fi
+
+echo "-- Building ionline ..."
 CGO_ENABLED=0 go build
 if [ $? -ne 0 ]; then
   echo "FAILED"
@@ -55,7 +63,7 @@ echo "-- Testing internal ..."
 echo "mode: set" > acc.coverprofile
 for Dir in $(go list ./internal/...);
 do
-    returnval=$(go test -coverprofile=profile.out $Dir $shortTestMode -args -public $GOPATH/src/github.com/erwanlbp/ionline/internal/public/ -firebase-auth IONLINE_TEST_SECRET_FIREBASE -log stdout)
+    returnval=$(go test -coverprofile=profile.out $Dir $shortTestMode -args -projectpath $GOPATH/src/github.com/erwanlbp/ionline/ -firebase-credentials IONLINE_TEST_SECRET_FIREBASE -log stdout)
     echo "$returnval"
     if [[ ${returnval} != *FAIL* ]]
     then

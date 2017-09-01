@@ -21,9 +21,9 @@ type firebaseSecret struct {
 // InitFirebase initialize the Firebase client and set the Firebase instance in the dao package
 func InitFirebase() (err error) {
 	// Load the file containing Firebase secret
-	secretFile, ok := os.LookupEnv(config.FirebaseAuth())
+	secretFile, ok := os.LookupEnv(config.FirebaseCredentials())
 	if !ok || secretFile == "" {
-		err = errors.New("Env " + config.FirebaseAuth() + " not found")
+		err = errors.New("Env " + config.FirebaseCredentials() + " not found")
 		return
 	}
 

@@ -17,7 +17,7 @@ type indexTemplateData struct {
 }
 
 func initIndexPage(router *mux.Router) {
-	router.Methods(http.MethodGet).Path(urlpath.IndexPath()).HandlerFunc(InitRequestEnvironment(indexPage))
+	router.Methods(http.MethodGet).Path(urlpath.IndexPath()).HandlerFunc(InitRequestEnvironment(RequireAuthentify(indexPage)))
 }
 
 func indexPage(log logging.Logger, args *argutil.Args) *responseutil.ReturnData {

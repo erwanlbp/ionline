@@ -2,11 +2,10 @@ package argutil
 
 import (
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
-
-	"io/ioutil"
 
 	"github.com/gorilla/mux"
 )

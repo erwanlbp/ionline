@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetIndex(t *testing.T) {
-	assert, _ := test.InitRest(t)
+	assert, _, auth := test.InitRest(t)
 
-	testrest.GetIndex200(assert)
+	testrest.GetIndex200(assert, auth)
 }

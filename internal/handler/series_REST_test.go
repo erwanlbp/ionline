@@ -26,24 +26,24 @@ func TestSeriesListTemplateData_DeleteSerieURL(t *testing.T) {
 }
 
 func TestListSeries(t *testing.T) {
-	assert, unikey, log := test.InitRestAndLogger(t)
+	assert, unikey, authChecksum, log := test.InitRestAndLogger(t)
 
 	serie := testinject.PushSerie(assert, unikey, log)
 
-	output := testrest.GetSeries200(assert)
+	output := testrest.GetSeries200(assert, authChecksum)
 	assert.True(strings.Contains(output, serie.ID))
 }
 
 func TestListSeries_FirebaseError(t *testing.T) {
-	assert, _ := test.InitRest(t)
+	assert, _, authChecksum := test.InitRest(t)
 
 	test.WantFirebaseError()
 
-	testrest.GetSeries(assert, rctest.Status500())
+	testrest.GetSeries(assert, authChecksum, rctest.Status500())
 }
 
 func TestAddSerie(t *testing.T) {
-	assert, unikey := test.InitRest(t)
+	assert, unikey, authChecksum := test.InitRest(t)
 
 	serie := dao.Serie{
 		Name:     unikey,
@@ -53,11 +53,11 @@ func TestAddSerie(t *testing.T) {
 		URL:      "https://www.zone-telechargement.ws/exclus/26986-telecharger-game-of-thrones-saison-7-french-hdtv-streaming.html",
 	}
 
-	testrest.AddSerie204(assert, serie)
+	testrest.AddSerie204(assert, serie, authChecksum)
 }
 
 func TestAddSerie_MissRequiredFields(t *testing.T) {
-	assert, unikey := test.InitRest(t)
+	assert, unikey, authChecksum := test.InitRest(t)
 
 	serie := dao.Serie{
 		Name:     unikey,
@@ -67,11 +67,11 @@ func TestAddSerie_MissRequiredFields(t *testing.T) {
 		URL:      "http://" + unikey + ".test",
 	}
 
-	testrest.AddSerie(assert, serie, rctest.Status400())
+	testrest.AddSerie(assert, serie, authChecksum, rctest.Status400())
 }
 
 func TestAddSerie_WrongURL(t *testing.T) {
-	assert, unikey := test.InitRest(t)
+	assert, unikey, authChecksum := test.InitRest(t)
 
 	serie := dao.Serie{
 		Name:     unikey,
@@ -81,11 +81,11 @@ func TestAddSerie_WrongURL(t *testing.T) {
 		URL:      "http://" + unikey + ".test",
 	}
 
-	testrest.AddSerie(assert, serie, rctest.Status400())
+	testrest.AddSerie(assert, serie, authChecksum, rctest.Status400())
 }
 
 func TestAddSerie_FirebaseError(t *testing.T) {
-	assert, unikey := test.InitRest(t)
+	assert, unikey, authChecksum := test.InitRest(t)
 
 	serie := dao.Serie{
 		Name:     unikey,
@@ -97,15 +97,15 @@ func TestAddSerie_FirebaseError(t *testing.T) {
 
 	test.WantFirebaseError()
 
-	testrest.AddSerie(assert, serie, rctest.Status500())
+	testrest.AddSerie(assert, serie, authChecksum, rctest.Status500())
 }
 
 func TestDeleteSerie(t *testing.T) {
-	assert, unikey, log := test.InitRestAndLogger(t)
+	assert, unikey, authChecksum, log := test.InitRestAndLogger(t)
 
 	serie := testinject.PushSerie(assert, unikey, log)
 
-	testrest.DeleteSerie204(assert, serie.ID)
+	testrest.DeleteSerie204(assert, serie.ID, authChecksum)
 
 	series, err := dao.FindAllSeries(log)
 	assert.Nil(err)
@@ -116,11 +116,11 @@ func TestDeleteSerie(t *testing.T) {
 }
 
 func TestDeleteSerie_FirebaseError(t *testing.T) {
-	assert, unikey, log := test.InitRestAndLogger(t)
+	assert, unikey, authChecksum, log := test.InitRestAndLogger(t)
 
 	serie := testinject.PushSerie(assert, unikey, log)
 
 	test.WantFirebaseError()
 
-	testrest.DeleteSerie(assert, serie.ID, rctest.Status500())
+	testrest.DeleteSerie(assert, serie.ID, authChecksum, rctest.Status500())
 }
